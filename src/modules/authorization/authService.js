@@ -40,8 +40,8 @@ const authService = {
     ];
   },
 
-  async getUserByToken(bearerToken) {
-    const decodedAT = await jwt.decode(bearerToken.split(' ')[1]);
+  async getUserByToken(token) {
+    const decodedAT = await jwt.decode(token);
     const user = await UserRepository.findById(decodedAT.id);
     return user;
   },

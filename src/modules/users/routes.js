@@ -1,7 +1,6 @@
 // new koa router exported to index
 const Router = require('koa-router');
 const passport = require('koa-passport');
-
 require('../authorization/passport');
 
 const { makeContoller } = require('../../libs/makeController');

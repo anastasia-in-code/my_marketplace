@@ -41,6 +41,7 @@ class ShopModel extends Model {
           through: {
             from: 'users_shops.shop_id',
             to: 'users_shops.user_id',
+            extra: ['user_role'],
           },
           to: 'users.id',
         },

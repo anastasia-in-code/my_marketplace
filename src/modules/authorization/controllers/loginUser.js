@@ -9,6 +9,7 @@ const loginUser = async (ctx) => {
   if (!userFound.length) {
     throw Boom.unauthorized('invalid email or password');
   }
+
   const checkPassword = await hashVerify(userFound[0].password, userData.password);
   if (checkPassword) {
     const tokenPayload = {
@@ -17,6 +18,8 @@ const loginUser = async (ctx) => {
     };
     const tokens = await authService.getTokens(tokenPayload);
 
+    ctx.user = userFound[0];
+    console.log(ctx.user);
     return tokens;
   }
   throw Boom.unauthorized('invalid email or password');
