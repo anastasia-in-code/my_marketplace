@@ -60,6 +60,25 @@ const ShopRepository = {
 
     return admins;
   },
+
+  async update(shop, newShopData) {
+    if (newShopData.newName) {
+      await ShopModel.query().patchAndFetchById(shop.id, {
+        name: newShopData.newName,
+      });
+    }
+    if (newShopData.newPhoneNumber) {
+      await ShopModel.query().upsertGraph({
+        id: shop.id,
+        phone_number: {
+          number: newShopData.newPhoneNumber,
+        },
+      });
+    }
+    const updatedShop = await ShopModel.query().findById(shop.id);
+    return updatedShop;
+  },
+
 };
 
 module.exports = { ShopRepository };

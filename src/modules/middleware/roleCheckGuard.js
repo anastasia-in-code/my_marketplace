@@ -19,13 +19,13 @@ const roleCheckGuard = async (ctx, next, action) => {
   const isAdmin = admins.find((admin) => admin.id === user.id);
 
   if (!isAdmin) {
-    forbidden(ctx);
+    return forbidden(ctx);
   }
 
   const hasPermission = checkRolePermissions(isAdmin.user_role, action);
 
   if (!hasPermission) {
-    forbidden(ctx);
+    return forbidden(ctx);
   }
 
   await next();

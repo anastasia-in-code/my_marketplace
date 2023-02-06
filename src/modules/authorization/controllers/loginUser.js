@@ -19,7 +19,7 @@ const loginUser = async (ctx) => {
     const tokens = await authService.getTokens(tokenPayload);
 
     ctx.user = userFound[0];
-    console.log(ctx.user);
+
     return tokens;
   }
   throw Boom.unauthorized('invalid email or password');
