@@ -12,7 +12,6 @@ class ShopModel extends Model {
 
       properties: {
         name: { type: 'string', minLength: 1, maxLength: 20 },
-        id: { type: 'integer' },
       },
     };
   }

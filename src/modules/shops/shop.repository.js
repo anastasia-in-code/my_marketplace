@@ -8,7 +8,7 @@ const ShopRepository = {
 
   async create(shopData, admin) {
     const newShop = await ShopModel.query().insertGraph({
-      uuid: await this.generateUUID(),
+      id: await this.generateUUID(),
       name: shopData.name,
       phone_number: [
         {
@@ -29,14 +29,9 @@ const ShopRepository = {
     return result;
   },
 
-  async findById(id) {
-    const result = await ShopModel.query().findById(id);
-    return result;
-  },
-
   async findByUUID(uuid) {
-    const result = await ShopModel.query()
-      .where('uuid', uuid);
+    const result = await ShopModel.query().findById(uuid);
+
     return result;
   },
 
@@ -54,12 +49,31 @@ const ShopRepository = {
 
   async getAdminsByUUID(uuid) {
     const shop = await ShopModel.query()
-      .where('uuid', uuid);
+      .where('id', uuid);
 
     const admins = await shop[0].$relatedQuery('admins');
 
     return admins;
   },
+
+  async update(shop, newShopData) {
+    if (newShopData.newName) {
+      await ShopModel.query().patchAndFetchById(shop.id, {
+        name: newShopData.newName,
+      });
+    }
+    if (newShopData.newPhoneNumber) {
+      await ShopModel.query().upsertGraph({
+        id: shop.id,
+        phone_number: {
+          number: newShopData.newPhoneNumber,
+        },
+      });
+    }
+    const updatedShop = await ShopModel.query().findById(shop.id);
+    return updatedShop;
+  },
+
 };
 
 module.exports = { ShopRepository };

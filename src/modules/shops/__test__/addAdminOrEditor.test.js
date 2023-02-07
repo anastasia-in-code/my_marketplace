@@ -34,7 +34,7 @@ describe('Assign Admin or Editor to shop', () => {
       phone_number_id: 22,
       expirationDate: null,
     };
-
+ 
     const ctx = {
       request: {
         body: {
@@ -63,10 +63,10 @@ describe('Assign Admin or Editor to shop', () => {
       addAdminSpy.mockResolvedValue(shopInfo);
 
       const response = await addAdminOrEditor(ctx);
-      expect(findByEmailSpy).toHaveBeenCalled();
-      expect(findByUUIDSpy).toHaveBeenCalled();
-      expect(addAdminSpy).toHaveBeenCalled();
 
+      expect(findByEmailSpy).toHaveBeenCalledWith(admin.email);
+      expect(findByUUIDSpy).toHaveBeenCalledWith(shop.uuid);
+      expect(addAdminSpy).toHaveBeenCalled();
       expect(response).toEqual({
         id: 22,
         uuid: '0375bae5-8a69-40ef-abaf-a9ce2c587e7c',

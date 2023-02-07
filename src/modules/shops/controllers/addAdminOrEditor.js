@@ -3,12 +3,12 @@ const { UserRepository } = require('../../users/index');
 
 const addAdminOrEditor = async (ctx) => {
   const requestData = ctx.request.body;
-  const shopId = ctx.params.id;
+  const { id } = ctx.params;
 
   const admin = await UserRepository.findByEmail(requestData.newAdminEmail);
-  const shop = await ShopRepository.findByUUID(shopId);
+  const shop = await ShopRepository.findByUUID(id);
 
-  const shopData = await ShopRepository.addAdmin(shop[0], admin[0], requestData.role);
+  const shopData = await ShopRepository.addAdmin(shop, admin[0], requestData.role);
 
   return shopData;
 };

@@ -1,17 +1,20 @@
+const Boom = require('boom');
 const { ADMIN_PERMISSIONS, EDITOR_PERMISSIONS } = require('../../db/rolePermissions');
+const { ShopRepository } = require('../modules/shops/shop.repository');
 
-function checkRolePermissions(role, action) {
-  let currentUserPermissions = [];
-  // eslint-disable-next-line default-case
-  switch (role) {
+async function checkRolePermissions(user, shop, action) {
+  const shopAdmins = await ShopRepository.getAdminsByUUID(shop.id);
+
+  const isAdmin = shopAdmins.find((admin) => admin.id === user.id);
+
+  switch (isAdmin.user_role) {
     case 'admin':
-      currentUserPermissions = ADMIN_PERMISSIONS;
-      break;
+      return ADMIN_PERMISSIONS.includes(action);
     case 'editor':
-      currentUserPermissions = EDITOR_PERMISSIONS;
-      break;
+      return EDITOR_PERMISSIONS.includes(action);
+    default:
+      return Boom.forbidden('you are not allowed to perform this action');
   }
-  return currentUserPermissions.includes(action);
 }
 
-module.exports = { checkRolePermissions };
+module.exports = { checkRolePermissions }; 

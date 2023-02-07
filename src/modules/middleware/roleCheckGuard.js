@@ -1,5 +1,4 @@
 const Boom = require('boom');
-const { authService } = require('../authorization/authService');
 const { ShopRepository } = require('../shops/shop.repository');
 const { checkRolePermissions } = require('../../libs/checkRolePermissions');
 
@@ -11,24 +10,21 @@ function forbidden(ctx) {
   return null;
 }
 
+// function roleCheckGuard(action) {
+//   console.log(action)
+//   return async (ctx, next) => {
+//     console.log(ctx, action)
 const roleCheckGuard = async (ctx, next, action) => {
-  const token = ctx.request.header.authorization.split(' ')[1];
-  const shopUUID = ctx.params.id;
-  const user = await authService.getUserByToken(token);
-  const admins = await ShopRepository.getAdminsByUUID(shopUUID);
-  const isAdmin = admins.find((admin) => admin.id === user.id);
+  const { id: shopUUID } = ctx.params;
+  const { user } = ctx.req;
 
-  if (!isAdmin) {
-    forbidden(ctx);
+  const shop = await ShopRepository.findByUUID(shopUUID);
+  const hasPermission = await checkRolePermissions(user, shop, action);
+  if (hasPermission) {
+    return next();
   }
-
-  const hasPermission = checkRolePermissions(isAdmin.user_role, action);
-
-  if (!hasPermission) {
-    forbidden(ctx);
-  }
-
-  await next();
+  return forbidden(ctx);
 };
+// }
 
 module.exports = { roleCheckGuard };
