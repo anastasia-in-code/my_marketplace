@@ -19,23 +19,21 @@ shopRouter.post('/post', makeContoller(createShop));
 shopRouter.get(
   '/:id',
   passport.authenticate(accessJWT, { session: false }),
-  ((ctx, next) => roleCheckGuard(ctx, next, 'GET_SHOP')),
-  // (() => roleCheckGuard('GET_SHOP')),
-
+  roleCheckGuard('GET_SHOP'),
   makeContoller(getShop),
 );
 
 shopRouter.post(
   '/:id/admin',
   passport.authenticate(accessJWT, { session: false }),
-  ((ctx, next) => roleCheckGuard(ctx, next, 'ADD_ADMIN')),
+  roleCheckGuard('GET_SHOP'),
   makeContoller(addAdminOrEditor),
 );
 
 shopRouter.patch(
   '/:id/edit',
   passport.authenticate(accessJWT, { session: false }),
-  ((ctx, next) => roleCheckGuard(ctx, next, 'EDIT_SHOP')),
+  roleCheckGuard('GET_SHOP'),
   makeContoller(patchShop),
 );
 
