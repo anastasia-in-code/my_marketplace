@@ -17,10 +17,8 @@ function roleCheckGuard(action) {
 
     const shop = await ShopRepository.findByUUID(shopUUID);
     const hasPermission = await checkRolePermissions(user, shop, action);
-    if (hasPermission) {
-      return next();
-    }
-    return forbidden(ctx);
+
+    return hasPermission ? next() : forbidden(ctx);
   };
 }
 

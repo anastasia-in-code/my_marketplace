@@ -26,14 +26,6 @@ describe('Assign Admin or Editor to shop', () => {
       phone_number_id: 22,
       expirationDate: null,
     };
-
-    const shopInfo = {
-      id: 22,
-      uuid: '0375bae5-8a69-40ef-abaf-a9ce2c587e7c',
-      name: 'newshop',
-      phone_number_id: 22,
-      expirationDate: null,
-    };
  
     const ctx = {
       request: {
@@ -60,7 +52,7 @@ describe('Assign Admin or Editor to shop', () => {
     it('should contain shop info in response', async () => {
       findByEmailSpy.mockResolvedValue(admin);
       findByUUIDSpy.mockResolvedValue(shop);
-      addAdminSpy.mockResolvedValue(shopInfo);
+      addAdminSpy.mockResolvedValue(shop);
 
       const response = await addAdminOrEditor(ctx);
 
