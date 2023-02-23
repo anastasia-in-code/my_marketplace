@@ -5,11 +5,12 @@
 exports.up = async function (knex) {
   await knex.schema
     .createTable('products', (table) => {
-      table.string('id', 50).primary();
+      table.text('id').primary();
       table.string('name', 20).notNullable();
-      table.decimal('price', null).notNullable();
-      table.string('description', 120);
-      table.string('shop_id', 50).notNullable();
+      table.integer('price').notNullable();
+      table.text('description');
+      table.text('shop_id').notNullable();
+      table.foreign('shop_id').references('shops.id').onDelete('CASCADE').onUpdate('CASCADE');
     });
 };
 
@@ -18,6 +19,10 @@ exports.up = async function (knex) {
  * @returns { Promise<void> }
  */
 exports.down = async function (knex) {
+  await knex
+    .table('products', (table) => {
+      table.dropForeign('shop_id');
+    });
   await knex.schema
     .dropTable('products');
 };
