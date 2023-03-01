@@ -1,6 +1,7 @@
 const uuid = require('uuid');
 const { ProductModel } = require('./product.model');
 const { ShopRepository } = require('../shops/shop.repository');
+const ProductImageRepository = require('./product.image.repository');
 
 const ProductRepository = {
   async generateUUID() {
@@ -9,16 +10,25 @@ const ProductRepository = {
 
   async create(newProductData, shopId) {
     const shop = await ShopRepository.findByUUID(shopId);
-    const newProduct = await shop.$relatedQuery('product').insert({
+
+    const newProduct = {
       id: await this.generateUUID(),
       name: newProductData.name,
       price: Math.round(newProductData.price * 100),
       description: newProductData.description,
-    });
+      is_active: true,
+    };
 
-    newProduct.price = newProductData.price;
+    if (newProductData.file) {
+      const file = await ProductImageRepository.create(newProductData.file);
+      newProduct.file_id = file.id;
+    }
 
-    return newProduct;
+    const savedProduct = await shop.$relatedQuery('product').insert(newProduct);
+
+    savedProduct.price = newProductData.price;
+
+    return savedProduct;
   },
 
   async findByUUID(uuid) {
@@ -41,13 +51,16 @@ const ProductRepository = {
   },
 
   async delete(productID) {
-    const deleted = await ProductModel.query().deleteById(productID);
+    const deleted = await ProductModel.query().patchAndFetchById(productID, {
+      is_active: false,
+    });
     return deleted;
   },
 
   async getAllByShop(shopID, page, limit) {
     const pageWithData = await ProductModel.query()
       .where('shop_id', '=', shopID)
+      .andWhere('is_active', 'true')
       .page(page - 1, limit);
 
     pageWithData.results.forEach((product) => product.price /= 100);

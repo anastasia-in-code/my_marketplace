@@ -2,9 +2,9 @@ const { ProductRepository } = require('../product.repository');
 
 const getAllShopProducts = async (ctx) => {
   const { page, limit } = ctx.query;
-  const { id: shopID } = ctx.params;
+  const { shopId } = ctx.params;
 
-  const results = await ProductRepository.getAllByShop(shopID, page, limit);
+  const results = await ProductRepository.getAllByShop(shopId, page, limit);
   return results;
 };
 

@@ -19,25 +19,25 @@ const { roleCheckGuard } = require('../middleware/roleCheckGuard');
 const { GET_SHOP, EDIT_SHOP, ADD_ADMIN } = require('../../../db/constants');
 
 shopRouter.use(passport.initialize());
-shopRouter.use('/:id/products', productRouter.routes());
+shopRouter.use('/:shopId/products', productRouter.routes());
 
 shopRouter.post('/post', makeContoller(createShop));
 shopRouter.get(
-  '/:id',
+  '/:shopId',
   passport.authenticate(ACCESS_JWT_AUTH_STRATEGY, { session: false }),
   roleCheckGuard(GET_SHOP),
   makeContoller(getShop),
 );
 
 shopRouter.post(
-  '/:id/admin',
+  '/:shopId/admin',
   passport.authenticate(ACCESS_JWT_AUTH_STRATEGY, { session: false }),
   roleCheckGuard(ADD_ADMIN),
   makeContoller(addAdminOrEditor),
 );
 
 shopRouter.patch(
-  '/:id/edit',
+  '/:shopId/edit',
   passport.authenticate(ACCESS_JWT_AUTH_STRATEGY, { session: false }),
   roleCheckGuard(EDIT_SHOP),
   makeContoller(patchShop),

@@ -11,6 +11,7 @@ exports.up = async function (knex) {
       table.text('description');
       table.text('shop_id').notNullable();
       table.foreign('shop_id').references('shops.id').onDelete('CASCADE').onUpdate('CASCADE');
+      table.boolean('is_active').notNullable();
     });
 };
 

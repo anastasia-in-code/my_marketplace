@@ -12,8 +12,9 @@ class ProductModel extends Model {
 
       properties: {
         name: { type: 'string', minLength: 1, maxLength: 20 },
-        price: { type: 'integer'},
+        price: { type: 'integer' },
         description: { type: 'string', minLength: 0, maxLength: 120 },
+        fileId: { type: 'string' },
       },
     };
   }

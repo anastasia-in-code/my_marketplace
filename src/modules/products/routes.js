@@ -1,5 +1,8 @@
 const Router = require('koa-router');
 const passport = require('koa-passport');
+const multer = require('@koa/multer');
+
+const upload = multer({ storage: multer.memoryStorage() });
 
 require('../authorization/passport');
 const { makeContoller } = require('../../libs/makeController');
@@ -21,8 +24,10 @@ productRouter.use(passport.initialize());
 
 productRouter.post(
   '/post',
+  upload.single('image'),
   passport.authenticate(ACCESS_JWT_AUTH_STRATEGY, { session: false }),
   roleCheckGuard(ADD_PRODUCT),
+
   makeContoller(postProduct),
 );
 

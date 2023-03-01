@@ -2,6 +2,7 @@ const { ADMIN_PERMISSIONS, EDITOR_PERMISSIONS } = require('../../db/rolePermissi
 const { ShopRepository } = require('../modules/shops/shop.repository');
 
 async function checkRolePermissions(user, shop) {
+  console.log(shop)
   const shopAdmins = await ShopRepository.getAdminsByUUID(shop.id);
 
   const isAdminOrEditor = shopAdmins.find((admin) => admin.id === user.id);

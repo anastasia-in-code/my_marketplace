@@ -12,7 +12,7 @@ function forbidden(ctx) {
 
 function roleCheckGuard(action) {
   return async (ctx, next) => {
-    const { id: shopUUID } = ctx.params;
+    const { shopId: shopUUID } = ctx.params;
     const { user } = ctx.req;
 
     const shop = await ShopRepository.findByUUID(shopUUID);
