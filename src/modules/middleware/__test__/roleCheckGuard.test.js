@@ -1,11 +1,14 @@
 const { roleCheckGuard } = require('../roleCheckGuard');
 const { ShopRepository } = require('../../shops/shop.repository');
-// const { checkRolePermissions } = require('../../../libs/checkRolePermissions');
+const { checkRolePermissions } = require('../../../libs/checkRolePermissions');
+const { ADD_ADMIN } = require('../../../../db/constants');
+
+jest.mock('../../../libs/checkRolePermissions');
 
 describe('Role Check Guard', () => {
   const ctx = {
     params: {
-      id: '43f9d9e3-275d-4554-ab79-80dacccd0981',
+      shopId: '0375bae5-8a69-40ef-abaf-a9ce2c587e7c',
     },
     req: {
       user: {
@@ -14,37 +17,53 @@ describe('Role Check Guard', () => {
         last_name: 'test last name',
         email: '55@gmail.com',
         phone_number_id: 96,
-        password: '$argon2id$v=19$m=65536,t=3,p=4$SeR08OhLY7h2uNlA/aUOAQ$iQhfEy+Crnyq0Q3ICQ2z8mSpXXnZqeFCe6H7cc/ypH4',
       },
     },
   };
 
   const shop = {
-    id: 22,
     uuid: '0375bae5-8a69-40ef-abaf-a9ce2c587e7c',
     name: 'newshop',
     phone_number_id: 22,
     expirationDate: null,
   };
 
+  const next = jest.fn();
+
   let findByUUIDSpy;
 
   beforeEach(() => {
     findByUUIDSpy = jest.spyOn(ShopRepository, 'findByUUID');
-    
   });
 
   afterEach(() => {
     jest.restoreAllMocks();
   });
 
-  it('admin has permissions to assign new admin', async () => {
+  it('action allowed when user has permissions', async () => {
     findByUUIDSpy.mockResolvedValue(shop);
-    const checkRolePermissions = jest.fn(()=> true);
+    checkRolePermissions.mockResolvedValue([ADD_ADMIN]);
 
-    console.log(checkRolePermissions)
+    const middleware = roleCheckGuard(ADD_ADMIN);
+    await middleware(ctx, next);
 
-    const result = await roleCheckGuard('GET_SHOP')(ctx);
-    console.log(result);
+    expect(ShopRepository.findByUUID).toHaveBeenCalledWith(shop.uuid);
+    expect(checkRolePermissions).toHaveBeenCalledWith(ctx.req.user, shop);
+    expect(next).toHaveBeenCalled();
+  });
+
+  it('action isn`t allowed when user has permissions', async () => {
+    findByUUIDSpy.mockResolvedValue(shop);
+    checkRolePermissions.mockResolvedValue([]);
+
+    const middleware = roleCheckGuard(ADD_ADMIN);
+    await middleware(ctx, next);
+
+    expect(ShopRepository.findByUUID).toHaveBeenCalledWith(shop.uuid);
+    expect(checkRolePermissions).toHaveBeenCalledWith(ctx.req.user, shop);
+    expect(ctx.status).toBe(403);
+    expect(ctx.body.error).toEqual('Forbidden');
+    expect(ctx.body.message).toEqual('you are not allowed to perform this action');
+    expect(next).toHaveBeenCalled();
   });
 });
