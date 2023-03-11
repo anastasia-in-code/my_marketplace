@@ -43,6 +43,7 @@ const authService = {
   async getUserByToken(token) {
     const decodedAT = await jwt.decode(token);
     const user = await UserRepository.findById(decodedAT.id);
+
     return user;
   },
 };

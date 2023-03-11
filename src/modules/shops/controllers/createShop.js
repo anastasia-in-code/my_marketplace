@@ -6,7 +6,7 @@ const createShop = async (ctx) => {
 
   const admin = await UserRepository.findByEmail(newShopData.email);
 
-  const newShop = await ShopRepository.create(newShopData, admin[0]);
+  const newShop = await ShopRepository.create(newShopData, admin);
 
   return newShop;
 };

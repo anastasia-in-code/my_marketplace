@@ -2,12 +2,21 @@
 const ADD_ADMIN = 'ADD_ADMIN';
 const GET_SHOP = 'GET_SHOP';
 const EDIT_SHOP = 'EDIT_SHOP';
+const ADD_PRODUCT = 'ADD_PRODUCT';
+const DELETE_PRODUCT = 'DELETE_PRODUCT'
 
 // PASSPPORT STRATEGIES
-const refreshJWT = 'refreshJWT';
-const accessJWT = 'accessJWT';
-const basic = 'basic';
+const REFRESH_JWT_AUTH_STRATEGY = 'refreshJWT';
+const ACCESS_JWT_AUTH_STRATEGY = 'accessJWT';
+const BASIC_AUTH_STRATEGY = 'basic';
 
 module.exports = {
-  ADD_ADMIN, GET_SHOP, EDIT_SHOP, refreshJWT, accessJWT, basic,
+  ADD_ADMIN,
+  GET_SHOP,
+  EDIT_SHOP,
+  ADD_PRODUCT,
+  DELETE_PRODUCT,
+  REFRESH_JWT_AUTH_STRATEGY,
+  ACCESS_JWT_AUTH_STRATEGY,
+  BASIC_AUTH_STRATEGY,
 };
