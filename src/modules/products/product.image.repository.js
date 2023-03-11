@@ -1,5 +1,6 @@
 const fs = require('fs');
 const crypto = require('crypto');
+const {productImageRepository} = require('../../../config')
 
 class ProductImageRepository {
   constructor(dir) {
@@ -32,7 +33,7 @@ class ProductImageRepository {
     return nameToArray[nameToArray.length - 1];
   }
 
-  async saveFile(file) {
+  saveFile(file) {
     const writableStream = fs.createWriteStream(
       `${this.dir}/${file.id}.${file.format}`,
     );
@@ -43,4 +44,4 @@ class ProductImageRepository {
   }
 }
 
-module.exports = new ProductImageRepository('productImageRepository');
+module.exports = new ProductImageRepository(productImageRepository);

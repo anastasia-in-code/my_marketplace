@@ -5,7 +5,7 @@ const deleteProduct = async (ctx) => {
 
   const product = await ProductRepository.findByUUID(productId);
 
-  if (product.is_active) {
+  if (product) {
     const deleted = await ProductRepository.delete(productId);
     return deleted;
   }

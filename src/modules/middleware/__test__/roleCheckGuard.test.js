@@ -55,8 +55,8 @@ describe('Role Check Guard', () => {
   it('action isn`t allowed when user has permissions', async () => {
     findByUUIDSpy.mockResolvedValue(shop);
     checkRolePermissions.mockResolvedValue([]);
-
     const middleware = roleCheckGuard(ADD_ADMIN);
+
     await middleware(ctx, next);
 
     expect(ShopRepository.findByUUID).toHaveBeenCalledWith(shop.uuid);
