@@ -16,7 +16,6 @@ describe('Assign Admin or Editor to shop', () => {
       last_name: 'test last name',
       email: 'user2@gmail.com',
       phone_number_id: 45,
-      password: '$argon2id$v=19$m=65536,t=3,p=4$WRSNuSOP9GiyEHdt0NqhZg$vhVSNeG8Cx2r0ee4V+B+D0X5Mdg0Op4jZU185bjEbmQ',
     };
 
     const shop = {
