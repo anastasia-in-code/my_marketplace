@@ -33,7 +33,9 @@ const ProductRepository = {
 
   async findByUUID(uuid) {
     const result = await ProductModel.query().findById(uuid).where('is_active', 'true');
-    result.price /= 100;
+    if (result) {
+      result.price /= 100;
+    }
 
     return result;
   },
