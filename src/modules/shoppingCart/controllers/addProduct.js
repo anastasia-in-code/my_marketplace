@@ -1,12 +1,14 @@
 const { CartRepository } = require('../cart.repository');
+const { cartService } = require('../cartService');
 
 const addProduct = async (ctx) => {
   const { productId } = ctx.params;
-  //   const { user } = ctx.req;
   let cartId = ctx.cookies.get('cartId');
 
   if (!cartId) {
-    const newCart = await CartRepository.create();
+    const token = ctx.request.header.authorization;
+    const newCart = await cartService.getCart(cartId, token);
+
     cartId = newCart.id;
     ctx.cookies.set('cartId', newCart.id);
   }
