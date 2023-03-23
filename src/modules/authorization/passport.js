@@ -31,15 +31,8 @@ optsAccess.secretOrKey = config.accessTokenSecretKey;
 passport.use(accessJWT, new JwtStrategy(optsAccess, async (jwtPayload, done) => {
   try {
     const user = await UserRepository.findById(jwtPayload.id);
-<<<<<<< HEAD
-    if (user) {
-      return done(null, user);
-    }
-    return done(null, false);
-=======
 
     return done(null, user || false);
->>>>>>> 55b8bb6... shopping card service
   } catch (error) {
     console.log(error);
     return null;
