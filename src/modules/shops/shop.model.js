@@ -21,8 +21,20 @@ class ShopModel extends Model {
     const { PhoneNumberModel } = require('../phone_numbers/phone_number.model');
     // eslint-disable-next-line global-require
     const { UserModel } = require('../users/index');
+    // eslint-disable-next-line global-require
+    const { ProductModel } = require('../products/index');
 
     return {
+
+      product: {
+        relation: Model.HasManyRelation,
+        modelClass: ProductModel,
+        join: {
+          from: 'shops.id',
+          to: 'products.shop_id',
+        },
+      },
+
       phone_number: {
         relation: Model.BelongsToOneRelation,
         modelClass: PhoneNumberModel,

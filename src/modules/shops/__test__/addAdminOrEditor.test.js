@@ -19,15 +19,6 @@ describe('Assign Admin or Editor to shop', () => {
     };
 
     const shop = {
-      id: 22,
-      uuid: '0375bae5-8a69-40ef-abaf-a9ce2c587e7c',
-      name: 'newshop',
-      phone_number_id: 22,
-      expirationDate: null,
-    };
-
-    const shopInfo = {
-      id: 22,
       uuid: '0375bae5-8a69-40ef-abaf-a9ce2c587e7c',
       name: 'newshop',
       phone_number_id: 22,
@@ -42,7 +33,7 @@ describe('Assign Admin or Editor to shop', () => {
         },
       },
       params: {
-        id: '0375bae5-8a69-40ef-abaf-a9ce2c587e7c',
+        shopId: '0375bae5-8a69-40ef-abaf-a9ce2c587e7c',
       },
     };
 
@@ -59,7 +50,7 @@ describe('Assign Admin or Editor to shop', () => {
     it('should contain shop info in response', async () => {
       findByEmailSpy.mockResolvedValue(admin);
       findByUUIDSpy.mockResolvedValue(shop);
-      addAdminSpy.mockResolvedValue(shopInfo);
+      addAdminSpy.mockResolvedValue(shop);
 
       const response = await addAdminOrEditor(ctx);
 
@@ -67,7 +58,6 @@ describe('Assign Admin or Editor to shop', () => {
       expect(findByUUIDSpy).toHaveBeenCalledWith(shop.uuid);
       expect(addAdminSpy).toHaveBeenCalled();
       expect(response).toEqual({
-        id: 22,
         uuid: '0375bae5-8a69-40ef-abaf-a9ce2c587e7c',
         name: 'newshop',
         phone_number_id: 22,

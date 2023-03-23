@@ -1,20 +1,21 @@
-const Boom = require('boom');
 const { ADMIN_PERMISSIONS, EDITOR_PERMISSIONS } = require('../../db/rolePermissions');
 const { ShopRepository } = require('../modules/shops/shop.repository');
 
-async function checkRolePermissions(user, shop, action) {
+async function checkRolePermissions(user, shop) {
   const shopAdmins = await ShopRepository.getAdminsByUUID(shop.id);
 
-  const isAdmin = shopAdmins.find((admin) => admin.id === user.id);
+  const isAdminOrEditor = shopAdmins.find((admin) => admin.id === user.id);
 
-  switch (isAdmin.user_role) {
+  if (!isAdminOrEditor) return false;
+
+  switch (isAdminOrEditor.user_role) {
     case 'admin':
-      return ADMIN_PERMISSIONS.includes(action);
+      return ADMIN_PERMISSIONS;
     case 'editor':
-      return EDITOR_PERMISSIONS.includes(action);
+      return EDITOR_PERMISSIONS;
     default:
-      return Boom.forbidden('you are not allowed to perform this action');
+      return false;
   }
 }
 
-module.exports = { checkRolePermissions }; 
+module.exports = { checkRolePermissions };

@@ -1,9 +1,9 @@
 const { ShopRepository } = require('../shop.repository');
 
 const getShop = async (ctx) => {
-  const { id } = ctx.params;
+  const { shopId } = ctx.params;
 
-  const shopData = await ShopRepository.findByUUID(id);
+  const shopData = await ShopRepository.findByUUID(shopId);
 
   return shopData;
 };

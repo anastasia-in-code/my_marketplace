@@ -21,7 +21,8 @@ const UserRepository = {
   async findByEmail(email) {
     const result = await UserModel.query()
       .where('email', email);
-    return result;
+
+    return result[0];
   },
 
   async findById(id) {
