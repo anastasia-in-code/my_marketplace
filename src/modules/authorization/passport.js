@@ -32,7 +32,7 @@ passport.use(ACCESS_JWT_AUTH_STRATEGY, new JwtStrategy(optsAccess, async (jwtPay
   try {
     const user = await UserRepository.findById(jwtPayload.id);
 
-    return done(null, user||false);
+    return done(null, user || false);
   } catch (error) {
     console.log(error);
     return null;
@@ -47,7 +47,7 @@ passport.use(REFRESH_JWT_AUTH_STRATEGY, new JwtStrategy(optsRefresh, async (jwtP
   try {
     const user = await UserRepository.findById(jwtPayload.id);
 
-    return done(null, user||false);
+    return done(null, user || false);
   } catch (error) {
     console.log(error);
     return null;

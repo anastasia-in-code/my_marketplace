@@ -16,18 +16,30 @@ const CartRepository = {
 
     if (userId) {
       newCart.user_id = userId;
-
-      return newCart;
+    } else {
+      newCart.session_id = this.randomId();
     }
-    newCart.session_id = this.randomId();
 
-    return newCart;
+    const savedCart = await CartModel.query().insert(newCart);
+    return savedCart;
   },
 
-  async updateProductQuantity(product) {
+  async delete(cartId) {
+    const deleted = await CartModel.query().deleteById(cartId);
+    return deleted;
+  },
+
+  async getCartByUserId(userId) {
+    const [cart] = await CartModel.query()
+      .where('user_id', userId);
+
+    return cart;
+  },
+
+  async updateProductQuantity(product, quantity = 1) {
     const updatedCartProduct = await CartProductModel.query()
       .patchAndFetchById(product.id, {
-        quantity: product.quantity + 1,
+        quantity: product.quantity + quantity,
       });
     return updatedCartProduct;
   },
@@ -40,12 +52,12 @@ const CartRepository = {
   async addProduct(cartId, productId) {
     const product = await ProductRepository.findByUUID(productId);
 
-    const productExist = await CartProductModel.query()
+    const [productExist] = await CartProductModel.query()
       .where('cart_id', cartId)
       .where('product_id', productId);
 
-    if (productExist.length) {
-      const savedProduct = await this.updateProductQuantity(productExist[0]);
+    if (productExist) {
+      const savedProduct = await this.updateProductQuantity(productExist);
       return savedProduct;
     }
 
@@ -65,6 +77,18 @@ const CartRepository = {
     const savedProduct = await this.addNewProduct(newCartProduct);
 
     return savedProduct;
+  },
+
+  async addFromCart(cartId, product) {
+    const [exist] = await CartProductModel.query()
+      .where('cart_id', cartId)
+      .where('product_id', product.product_id);
+
+    if (exist) {
+      await this.updateProductQuantity(exist, product.quantity);
+    } else {
+      await this.addProduct(cartId, product.product_id);
+    }
   },
 
   async getProducts(cartId) {
