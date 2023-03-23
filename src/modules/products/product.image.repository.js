@@ -1,10 +1,6 @@
 const fs = require('fs');
 const crypto = require('crypto');
-<<<<<<< HEAD
-const { productImageRepository } = require('../../../config');
-=======
-const {productImageRepository} = require('../../../config')
->>>>>>> 3744c2defba3d6d8b2308f7852ad43f450a3a4bd
+const { productImageRepository } = require('../../../config')
 
 class ProductImageRepository {
   constructor(dir) {
